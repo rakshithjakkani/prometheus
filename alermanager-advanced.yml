@@ -1,0 +1,65 @@
+# NOTE: DON'T UNCOMMENT ANYTHING IN THIS FILE 
+# - alert: app_latency_above_5sec
+#   expr: job:app_responce_latency_seconds:rate1m >=  5
+#   for: 2m
+#   labels:
+      # app_type: frontend
+#     # key value pairs is user choised. 
+#     severity: critical
+global:
+  smtp_from: 'example@gmail.com'
+  smtp_smarthost: smpt.gmail.com:587
+  smtp_auth_username: 'example@gmail.com'
+  smtp_auth_identity: 'example@gmail.com'
+  smtp_auth_password: 'Rak$1234'
+
+route:
+  # default user when the specified labels are not matched then this "admin" user will get the email notification. we can call this user as 
+  # root user 
+  receiver: admin
+  #when specified routes under the route configuration, then this mean that there are child receivers (we can call it as departments like db,fronten and backend)
+  routes:
+  # match_re is a sub configuration which is allows us add labels for email route. Means that when this labels are matched then only send 
+  # email to under provided user or else send to defaut user (root user)
+  - match_re: 
+      # this labels are mentioned in the alerting rules file 
+      app_type: (frontend|backend) # | symbol refers to (or) matcher will take both values, frontend and backend when label come with frontend or backend.
+    #when the above labels are matched then send notification to this "FE-BE-user".
+    receiver: FE-BE-user 
+    # forntend team 
+    routes:
+    - match:
+       app_type: frontend
+      # this user is like root user for frontend team
+      receiver: frontend-user
+      # sub users will come now like for warning, alert has to send developer and for critical has to send to his manager. 
+      route:
+      - match:
+          # app_type: frontend or backend, severity: warning or critical are the labels of each alert rule 
+          # for better understanding i have mentioned alert rules configuration and commneted at the begining of this file  
+          severity: warning
+        receiver: frontend-developer
+      - match:
+          severity: critical
+        receiver: frontend-manager
+# In the above route configuraion we provided which alerts has to send to which user. Now, we will provide user email configuration.
+receivers:
+- name: admin
+  email_configs:
+  - to: 'xxxxxxx@gmail.com'
+
+- name: FE-BE-user
+  email_configs:
+  - to: 'fb-be-user@gmail.com'
+
+- name: frontend-user
+  email_configs:
+  - to: 'frontend-user@gmail.com'
+
+- name:  frontend-developer
+  email_configs:
+  - to: ' frontend-developer@gmail.com'
+
+- name: frontend-manager
+  email_configs:
+  - to: 'frontend-manager@gmail.com'

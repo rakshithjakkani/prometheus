@@ -1,0 +1,36 @@
+global:
+
+route:
+  # default user when the specified labels are not matched then this "admin" user will get the email notification. we can call this user as 
+  # root user 
+  receiver: admin
+  #when specified routes under the route configuration, then this mean that there are child receivers (we can call it as departments like db,fronten and backend)
+  routes:
+  # match_re is a sub configuration which is allows us add labels for email route. Means that when this labels are matched then only send 
+  # email to under provided user or else send to defaut user (root user)
+  - match_re: 
+       # this labels are mentioned in the alerting rules file 
+      app_type: (frontend|backend) # | symbol refers to (or) matcher will take both values, frontend and backend when label come with frontend or backend.
+    #when the above labels are matched then send notification to this "FE-BE-user".
+    receiver: FE-BE-user 
+
+# In the above route configuraion we provided which alerts has to send to which user. Now, we will provide user email configuration.
+receivers:
+- name: admin
+  email_configs:
+  - to: 'xxxxxxx@gmail.com'
+    smtp_from: 'example@gmail.com'
+    smtp_smarthost: smpt.gmail.com:587
+    smtp_auth_username: 'example@gmail.com'
+    smtp_auth_identity: 'example@gmail.com'
+    smtp_auth_password: 'Rak$1234'
+
+- name: FE-BE-user
+  email_configs:
+  - to: 'fb-be-user@gmail.com'
+    smtp_from: 'example@gmail.com'
+    smtp_smarthost: smpt.gmail.com:587
+    smtp_auth_username: 'example@gmail.com'
+    smtp_auth_identity: 'example@gmail.com'
+    smtp_auth_password: 'Rak$1234'
+

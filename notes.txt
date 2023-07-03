@@ -1,0 +1,9 @@
+* for clause ----> which is used to hold the alert for certain period of time 
+* Linux commands 
+    - ps ax | grep <process-name> ex:- prometheus---> to search for the process ID
+    - kill -HUP <process-ID>----> to stop the process
+* when we want to segregate alerts based on critical, warning, and firing, we need to use labels in alerting rules.
+    - for prometheus alerting labels, key value pairs is user defaind, not a pre defaind.
+ALERT MANAGER:-
+* alert manager is a tool which takes alerts from each of prometheus server and notify the user using various channels like slake SNS etc.
+* alert manager is on of the component in prometheus configuration.

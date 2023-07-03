@@ -1,0 +1,31 @@
+# refer your rules file in 
+# rule_file:
+# /path/to/your-file-----> in prometheus configuration file 
+groups:
+  - name: test-rules
+    rules:
+    - alert: NodeExporterDown
+# This Expression is used to alert when node_Exporter got down 
+      expr: up{job="node_exporter"} == 0 
+# In this case, If the node exporter would down for a 1m then only the alert will come 
+      for: 1m
+    - record: job:app_responce_latency_seconds:rate1m
+      expr: rate(app_responce_latency_seconds_sum[1m]) / rate(app_responce_latency_seconds_count[1m])
+    
+    - alert: app_latency_above_5sec
+      expr: job:app_responce_latency_seconds:rate1m >=  5
+      for: 2m
+      labels:
+      # key value pairs is user choised. 
+        severity: critical
+    - alert: app_latency_above_2sec
+      expr: 2 < job:app_responce_latency_seconds:rate1m > 5
+      for: 2m
+      labels:
+       # key value pairs is user choised.
+        severity: warning
+      annotations:
+        summery: 'the app latency is in between 2 to 5 seconds. please go and check'
+        # {{ $labels.instance }} through this variables we can get the values of that particular metric instance, job name and value that how much the time from how many seconds the app is giving latency 
+        description: 'the app latency of {{ $labels.instance }} of job {{ $labels.job }} is {{ $value }} for in between 2 to 5 seconds'
+        app_link: <you can provide the URL of app here>
