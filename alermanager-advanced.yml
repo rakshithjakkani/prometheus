@@ -42,6 +42,14 @@ route:
       - match:
           severity: critical
         receiver: frontend-manager
+
+  - match_re: 
+      # this labels are mentioned in the alerting rules file 
+      app_type: db # | symbol refers to (or) matcher will take both values, frontend and backend when label come with frontend or backend.
+    #when the above labels are matched then send notification to this "FE-BE-user".
+    receiver: db-user 
+    # forntend team 
+
 # In the above route configuraion we provided which alerts has to send to which user. Now, we will provide user email configuration.
 receivers:
 - name: admin
