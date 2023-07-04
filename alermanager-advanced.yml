@@ -33,6 +33,7 @@ route:
       # this user is like root user for frontend team
       receiver: frontend-user
       # sub users will come now like for warning, alert has to send developer and for critical has to send to his manager. 
+      group_by: [category] # we will be label this in alerting rule configuration like categroy: cpu and categroy: memory
       routes:
       - match:
           # app_type: frontend or backend, severity: warning or critical are the labels of each alert rule 
