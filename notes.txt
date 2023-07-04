@@ -7,3 +7,22 @@
 ALERT MANAGER:-
 * alert manager is a tool which takes alerts from each of prometheus server and notify the user using various channels like slake SNS etc.
 * alert manager is on of the component in prometheus configuration.
+
+SLACK AND PROMETHEUS INTEGRATION 
+
+things to do slack end
+-----------------------
+* Go to slack official website and create a slack account there. There you can find create workspace click on that and procede with entering details.
+* once channel has been created we need to install incoming webhooks which gives us the uniq URL which is used to integrate prometheus alert manager and slack.
+* click on more button on left side bar and select apps and search for incoming webhooks
+* when installing incoming webhooks they asks you for channel---> select the channel---> there you will find a uniq URL. make a note of that URL
+
+thing to do prometheus alert manager
+-------------------------------------
+* open the alert manager config file and edit at the receiver main configuration as below 
+- name: db-user
+  slack_configs:
+  - channel: '#prometheus'
+    api_url: <enter the copied url from slack end>
+    title: 'node_exporter is down'
+    text: 'node_exporter is down for more than 2 minutes'

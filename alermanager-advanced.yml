@@ -18,6 +18,7 @@ route:
   # root user 
   receiver: admin
   #when specified routes under the route configuration, then this mean that there are child receivers (we can call it as departments like db,fronten and backend)
+  group_wait: 40 # it is a feature which is used to make alert sending in a waiting state for a 40 seconds. which means that alert manager will wait for 40 seconds before sending initial alert notification to user
   routes:
   # match_re is a sub configuration which is allows us add labels for email route. Means that when this labels are matched then only send 
   # email to under provided user or else send to defaut user (root user)
@@ -43,13 +44,29 @@ route:
       - match:
           severity: critical
         receiver: frontend-manager
+        # By default when alert manager finds required labels to send alert notification, then the alert manager will stop searching there itself.
+        # because alert manager found its label. But in a case where we want alert manager to continue to search for labels. Then we use continue 
+        continue: true 
 
   - match_re: 
       # this labels are mentioned in the alerting rules file 
       app_type: db # | symbol refers to (or) matcher will take both values, frontend and backend when label come with frontend or backend.
     #when the above labels are matched then send notification to this "FE-BE-user".
     receiver: db-user 
-    # forntend team 
+#############################------------------------#############################
+#############################---inihibit-configuration----########################
+# In a case when critical alert and warning alert came at the same time or in a nearer time, then we don't want to receive warning alert 
+# because when critical already came in, there is a no use of warning so thats why we use inhibition 
+
+inhibit_rules:
+- source_match:
+    severity: 'critical'
+  # which alert we want to ignore. The particular alert should have this label severity: 'critical'
+  target_match:
+    severity: 'warning'
+  # the both alerts should have this two label keys
+  equal: ['app_type','category']
+
 
 # In the above route configuraion we provided that which alerts has to send to which user. Now, we will provide user email configuration.
 receivers:
@@ -76,6 +93,16 @@ receivers:
 - name: db-user
   email_configs:
   - to: 'db-user@gmail.com'
+
+###########################--------SLACK CONFIGURATION----------#################
+# - name: db-user
+#   slack_configs:
+#   - channel: '#prometheus'
+#     api_url: <enter the slack channel unique url>
+#     title: 'node_exporter is down'
+#     text: 'node_exporter is down for more than 2 minutes'
+
+
 
 
 # after writing your routings in alert manager configuration you can go and check with amtool "amtool check-config <your file name>"
