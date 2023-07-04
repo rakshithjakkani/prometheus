@@ -71,3 +71,7 @@ receivers:
 - name: frontend-manager
   email_configs:
   - to: 'frontend-manager@gmail.com'
+
+- name: db-user
+  email_configs:
+  - to: 'db-user@gmail.com'
