@@ -142,3 +142,34 @@ prometheus pushed configuration:-
      static_configs:
      - targets: ['localhost:9091']
 
+
+==============================
+prometheus service discovery
+==============================
+* service discovery is nothing but a prometheus scrapes the system's metrics without have job in scrape_config configuration.
+
+file service discovery
+----------------------
+* we will be adding a targets in a file called file_sd.yml and will refer this file in pormetheus configuraion file so that prometheus fetch the metrics from the 
+  file service discovery
+
+  ---> prometheus configuraion:-
+  - job_name: node_exporter
+    file_sd_configs:
+    - files:
+      - <path-to-file>/<filename>.yml
+  
+  ---> file_sd.yml would look like 
+  - targets:
+    - localhost:9091
+    labels:
+      team: "devops"
+      region: "eu-central-1"
+
+  - targets:
+    - localhost:9091
+    labels:
+      team: "devops"
+      region: "eu-central-1"
+      
+      
