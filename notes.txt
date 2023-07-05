@@ -167,9 +167,9 @@ file service discovery
       region: "eu-central-1"
 
   - targets:
-    - localhost:9091
+    - localhost12:9091
     labels:
       team: "devops"
-      region: "eu-central-1"
+      region: "us-east-1"
       
       
