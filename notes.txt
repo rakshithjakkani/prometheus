@@ -119,8 +119,8 @@ scrape_configs:
         - https://prometheus.io   # Target to probe with https.
         - http://example.com:8080 # Target to probe with http on port 8080.
     relabel_configs:
-      - source_labels: [__address__]
-        target_label: __param_target
+      - source_labels: [__address__] # when we want to assign anothe label(key's) value to another label key then we use this relabel_configs
+        target_label: __param_target # here we are assigning "__param_target" value to the [__address__]
       - source_labels: [__param_target]
         target_label: instance
       - target_label: __address__
@@ -171,5 +171,15 @@ file service discovery
     labels:
       team: "devops"
       region: "us-east-1"
+
+======================
+AWS ec2 moniterning
+======================
+* In pormetheus configuration 
+- job_name: ec2
+  ec2_sd_configs:
+    - access_key: xxxxxxxxxxxx
+      secret_key: yyyyyyyyyyyy
+      region: zzzzzzz 
       
       
