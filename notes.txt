@@ -35,6 +35,7 @@ BLACK BOX EXPORTER
 * Black box exporter is a probing exporter which is used to moniter the network endpoints such as HTTP,HTTPS,DNS,ICMP and TCP.
 * On probing it give detailed metric about the request.
 
+
 General notes:-
 ---------------
 * in <black box url>/metrics has the black box metrics such as black box cpu and memory utilization. 
@@ -55,6 +56,7 @@ process:-
     - when prometheus wants to watch prometheus.io.
     - prometheus makes a get request call to black box exporter through a module called ICMP.
     - exporter will executes a porbe to get metrics from pormetheus.io.
+
 
 HTTP module :-
 ---------------
@@ -84,3 +86,32 @@ example_dns:
     preffered_ip_protocol: ip4
     transport_protocol: "tcp"
     query_name: "www.google.com"
+
+
+Configure black-box exporter in prometheus config:-
+----------------------------------------------------
+* After writing modules in blackbox_exporter configuration then come to prometheus configuration and do the tasks below 
+* Open the prometheus configuration file under the scrape config and add a job called "black-box-exporter"(the name would be your choice).
+    job_name: 'black-box-exporter'
+    static_config:
+    - target: ['localhost:<expo-port>']
+ - In the above scrape_config prometheus is only scraping blackbox_exporter metrics that which provided by black box not the target endpoints of blackbox_exporter 
+   to scrape the target endpoints via blackbox_exporter we need to add some extra configuration in prometheus configuration as shown below 
+    
+scrape_configs:
+  - job_name: 'blackbox'
+    metrics_path: /probe
+    params:
+      module: [http_2xx]  # Look for a HTTP 200 response.
+    static_configs:
+      - targets:
+        - http://prometheus.io    # Target to probe with http.
+        - https://prometheus.io   # Target to probe with https.
+        - http://example.com:8080 # Target to probe with http on port 8080.
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 127.0.0.1:9115  # The blackbox exporter's real hostname:port.
