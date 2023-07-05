@@ -35,6 +35,12 @@ BLACK BOX EXPORTER
 * Black box exporter is a probing exporter which is used to moniter the network endpoints such as HTTP,HTTPS,DNS,ICMP and TCP.
 * On probing it give detailed metric about the request.
 
+General notes:-
+---------------
+* in <black box url>/metrics has the black box metrics such as black box cpu and memory utilization. 
+* in <black box url>/probes we can find the target metrics that are scraped. 
+
+
 use cases:-
 ----------
 * Used when we dont have a clear knowledge of system intenally.
@@ -50,8 +56,31 @@ process:-
     - prometheus makes a get request call to black box exporter through a module called ICMP.
     - exporter will executes a porbe to get metrics from pormetheus.io.
 
-General notes:-
+HTTP module :-
 ---------------
-* in <black box url>/metrics has the black box metrics such as black box cpu and memory utilization. 
-* in <black box url>/probes we can find the target metrics that are scraped. 
-* 
+* Black box can access the systems using probes like HTTP, HTTPS, ICMP and TCP 
+* To access our application by  Black box exporter we need write the modulues in Black box config file 
+* below is examples of the http module 
+    http_ipv4: ------> this is the module name. you can name it anything as your wish. 
+      prober: http ------> mention the module 
+      http:
+        preffered_ip_protocol: ip4
+
+    http_find_prom: ------> this is the module name. you can name it anything as your wish. 
+      prober: http ------> mention the module 
+      http:
+        preffered_ip_protocol: ip4
+        fail_if_body_not_match_regexp: -----> condition
+        - "moniterning" -----> value for condition 
+
+DNS module:-
+-------------
+* It is used to hit directly to the DNS addresses of a system 
+* example :-
+
+example_dns:
+  prober: dns
+  dns:
+    preffered_ip_protocol: ip4
+    transport_protocol: "tcp"
+    query_name: "www.google.com"
