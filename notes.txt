@@ -8,6 +8,16 @@ ALERT MANAGER:-
 * alert manager is a tool which takes alerts from each of prometheus server and notify the user using various channels like slake SNS etc.
 * alert manager is on of the component in prometheus configuration.
 
+==============================
+prometheus configuration
+==============================
+* when a job is added in prometheus configuration file, prometheus automatically pic the job name and instance. they are.... which we configured in scrape_config
+* The example job is below 
+    - job_name: cloudwatch_exporter
+    honor_labels: true ------> when honor_labels set to true then the auto discovered labels cannot picked by prometheus 
+      static_config:
+      - targets: ['localhost:<port>']
+================================
 SLACK AND PROMETHEUS INTEGRATION 
 ================================
 
@@ -29,7 +39,7 @@ thing to do prometheus alert manager
     text: 'node_exporter is down for more than 2 minutes'
 
 
-
+===================
 BLACK BOX EXPORTER
 ===================
 * Black box exporter is a probing exporter which is used to moniter the network endpoints such as HTTP,HTTPS,DNS,ICMP and TCP.
@@ -115,3 +125,20 @@ scrape_configs:
         target_label: instance
       - target_label: __address__
         replacement: 127.0.0.1:9115  # The blackbox exporter's real hostname:port.
+
+========================
+ Prometheus Pushgateway 
+========================
+* Pushgateway is a interface between prometheus server and a batch or crone jobes 
+* In a case where Batch or crone jobs are running in short period of time, While prometheus scraping is initiated there mait jobs are not in a running state. 
+  to overcome this problem Pushgateway comes into picture 
+* while jobs running, the job metrics will pushed  to Pushgateway and from Pushgateway the prometheus will getpull metrics. 
+* 9091 is default port number of Pushgateway 
+
+prometheus pushed configuration:-
+---------------------------------
+* add a job in scrape_config as shown below 
+   - job_name: Pushgateway
+     static_configs:
+     - targets: ['localhost:9091']
+
