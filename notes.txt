@@ -9,6 +9,7 @@ ALERT MANAGER:-
 * alert manager is on of the component in prometheus configuration.
 
 SLACK AND PROMETHEUS INTEGRATION 
+================================
 
 things to do slack end
 -----------------------
@@ -26,3 +27,31 @@ thing to do prometheus alert manager
     api_url: <enter the copied url from slack end>
     title: 'node_exporter is down'
     text: 'node_exporter is down for more than 2 minutes'
+
+
+
+BLACK BOX EXPORTER
+===================
+* Black box exporter is a probing exporter which is used to moniter the network endpoints such as HTTP,HTTPS,DNS,ICMP and TCP.
+* On probing it give detailed metric about the request.
+
+use cases:-
+----------
+* Used when we dont have a clear knowledge of system intenally.
+* Used to measure responce time of a HTTP or HTTPS endpoint URLs.
+* To resolve DNS responce times to recover the network latency issues of a application.
+* To check availabilty of your services, their up time, network health and other things.
+
+process:-
+----------
+* prometheus makes get request to the black box exporter using a modules.
+* black box executes appropriate porbe to get metric from the targer for example,
+    - when prometheus wants to watch prometheus.io.
+    - prometheus makes a get request call to black box exporter through a module called ICMP.
+    - exporter will executes a porbe to get metrics from pormetheus.io.
+
+General notes:-
+---------------
+* in <black box url>/metrics has the black box metrics such as black box cpu and memory utilization. 
+* in <black box url>/probes we can find the target metrics that are scraped. 
+* 
