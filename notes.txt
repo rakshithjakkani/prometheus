@@ -181,5 +181,11 @@ AWS ec2 moniterning
     - access_key: xxxxxxxxxxxx
       secret_key: yyyyyyyyyyyy
       region: zzzzzzz 
-      
+
+
+=======================
+promQL queries
+=======================
+* sum(rate(container_cpu_usage_seconds_total{image="", pod=~"prometheus-server.+"}[3m])) by (pod) * 1000
+* container_memory_usage_bytes{image="", pod=~"prometheus-prometheus-cloudwatch-exporter-7cfbd4459d-cggk9"} / 1024 /1024
       
