@@ -7,7 +7,13 @@
 ALERT MANAGER:-
 * alert manager is a tool which takes alerts from each of prometheus server and notify the user using various channels like slake SNS etc.
 * alert manager is on of the component in prometheus configuration.
-
+=============
+Promtool
+=============
+* It is tool which used for syntax check of a prometheus configuration file 
+* To quickly check whether a rule file is syntactically correct without starting a Prometheus server, you can use     
+  Prometheus's promtool command-line utility tool
+* promtool check rules /path/to/example.rules.yml-----> exmaple file to check
 ==============================
 prometheus configuration
 ==============================
